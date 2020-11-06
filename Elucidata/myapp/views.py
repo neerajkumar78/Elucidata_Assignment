@@ -52,13 +52,13 @@ def part1(request,filename):
 	df3.to_csv(base_path+'\\output_files\\plasmalogen.csv',index=False)
 	dataset_path_list = ['output_files\\pc.csv','output_files\\lpc.csv','output_files\\plasmalogen.csv']
 	zip_subdir = base_path
-	download_file = io.BytesIO()
-	with ZipFile(download_file,'w') as zip_file:
+	ioObj = io.BytesIO()
+	with ZipFile(ioObj,'w') as zip_file:
 		for csv_file in dataset_path_list:
 			zip_file.write(os.path.join(zip_subdir,csv_file))
 			os.remove(os.path.join(zip_subdir,csv_file)) 
 
-	response = HttpResponse(download_file.getvalue(),content_type='application/octet-stream')		
+	response = HttpResponse(ioObj.getvalue(),content_type='application/octet-stream')		
 	response['Content-Disposition'] = 'attachment; filename="child_dataset.zip"'
 			
 	return response

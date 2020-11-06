@@ -42,11 +42,11 @@ def part1(request,filename):
 	base_path=os.path.join(BASE_DIR,'myapp\\static\\myapp')
 	df = pd.read_excel(os.path.join(base_path,'upload',filename+'.xlsx'))
 	df1 = df[(df['Accepted Compound ID'].str.endswith('PC',na=False)) & (df['Accepted Compound ID'].str[-3]!='L')]
-	df1.to_csv(base_path+'\\output_files\\PC.csv',index=False)
+	df1.to_csv(base_path+'\\output_files\\pc.csv',index=False)
 	df2 = df[df['Accepted Compound ID'].str.endswith('LPC',na=False)]
-	df2.to_csv(base_path+'\\output_files\\LPC.csv',index=False)
+	df2.to_csv(base_path+'\\output_files\\lpc.csv',index=False)
 	df3 = df[df['Accepted Compound ID'].str.endswith('plasmalogen',na=False)]
-	df3.to_csv(base_path+'\\output_files\\Plasmalogen.csv',index=False)
+	df3.to_csv(base_path+'\\output_files\\plasmalogen.csv',index=False)
 	dataset_path_list = [base_path+'\\output_files\\PC.csv',base_path+'\\output_files\\LPC.csv',base_path+'\\output_files\\Plasmalogen.csv']
 	zipWriteObj = ZipFile(base_path+'\\output_files\\child_datasets.zip', 'w')
 	for csv_file in dataset_path_list:
@@ -75,7 +75,7 @@ def part2and3(request,filename):
 	df.drop(['m/z','Retention time (min)'],axis=1,inplace=True)
 	df = df.groupby(df['Retention Time Roundoff (in mins)']).mean()
 	response = HttpResponse(content_type='text/csv')
-	response['Content-Disposition'] = 'attachment; filename="Rounded_Retention_Time.csv"'
+	response['Content-Disposition'] = 'attachment; filename="RoundedRetentionTime.csv"'
 	df.to_csv(response,index=True)
 	return response
 

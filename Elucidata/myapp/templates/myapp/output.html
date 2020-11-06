@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <a href={% url 'home' %}>Home</a>
+</br>
+    {% ifequal data True %}
+    
+    {{msg}}
+</br> 
+    Download : 
+    <a href="{{link1}}">First Part</a>
+</br> 
+    Download :  
+    <a href="{{link2}}">Second Part</a>
+    
+    {% endifequal %}
+</body>

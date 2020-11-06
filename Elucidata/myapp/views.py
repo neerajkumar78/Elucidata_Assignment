@@ -7,6 +7,9 @@ from zipfile import ZipFile
 import os
 import pathlib
 from Elucidata.settings import BASE_DIR
+from zipfile import ZIP_DEFLATED
+from django_zipfile import TemplateZipFile
+import io
 
 '''
 view to handle file uploading 
@@ -47,16 +50,17 @@ def part1(request,filename):
 	df2.to_csv(base_path+'\\output_files\\lpc.csv',index=False)
 	df3 = df[df['Accepted Compound ID'].str.endswith('plasmalogen',na=False)]
 	df3.to_csv(base_path+'\\output_files\\plasmalogen.csv',index=False)
-	dataset_path_list = [base_path+'\\output_files\\PC.csv',base_path+'\\output_files\\LPC.csv',base_path+'\\output_files\\Plasmalogen.csv']
-	zipWriteObj = ZipFile(base_path+'\\output_files\\child_datasets.zip', 'w')
-	for csv_file in dataset_path_list:
-		zipWriteObj.write(csv_file)
-		os.remove(csv_file) 
-	zipWriteObj.close()	
-	zipReadObj = ZipFile(base_path+'\\output_files\\child_datasets.zip', 'r')
-	response = HttpResponse(zipReadObj,content_type='application/octet-stream')		
-	response['Content-Disposition'] = 'attachment; filename="child_datasets.zip"'
-	zipReadObj.close()
+	dataset_path_list = ['output_files\\pc.csv','output_files\\lpc.csv','output_files\\plasmalogen.csv']
+	zip_subdir = base_path
+	download_file = io.BytesIO()
+	with ZipFile(download_file,'w') as zip_file:
+		for csv_file in dataset_path_list:
+			zip_file.write(os.path.join(zip_subdir,csv_file))
+			os.remove(os.path.join(zip_subdir,csv_file)) 
+
+	response = HttpResponse(download_file.getvalue(),content_type='application/octet-stream')		
+	response['Content-Disposition'] = 'attachment; filename="child_dataset.zip"'
+			
 	return response
 
 '''
